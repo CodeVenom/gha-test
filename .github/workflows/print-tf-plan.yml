@@ -1,0 +1,8 @@
+name: print-tf-plan
+on: [push]
+jobs:
+  print-tf-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "hello"

@@ -1,5 +1,8 @@
 name: print-tf-plan
 on: [push]
+permissions:
+  id-token: write
+  contents: read
 jobs:
   print-tf-plan:
     runs-on: ubuntu-latest

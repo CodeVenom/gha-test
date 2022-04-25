@@ -9,6 +9,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+      - name: install stuff
+        run: |
+          wget https://releases.hashicorp.com/terraform/1.1.8/terraform_1.1.8_linux_arm64.zip
+          unzip terraform_1.1.8_linux_arm64.zip
+          rm terraform_1.1.8_linux_arm64.zip
+          mv terraform /bin
       - name: hello
         run: echo "hello"
       - name: assume role
@@ -22,3 +28,7 @@ jobs:
         run: aws sts get-caller-identity
       - name: ls
         run: ls -A
+      - name: print tf plan
+        run: |
+          cd apply/banana
+          terraform plan

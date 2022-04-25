@@ -39,3 +39,5 @@ jobs:
           cd apply/banana
           terraform init
           terraform plan
+      - name: brew install yq
+        run: brew install yq

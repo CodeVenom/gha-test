@@ -16,7 +16,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::111093107596:role/jj-s3-lister
           aws-region: eu-central-1
-      - name: aws - s3 list all
+      - name: aws - s3 list
         run: aws s3 ls
       - name: aws - get caller identity
         run: aws sts get-caller-identity

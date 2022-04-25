@@ -31,8 +31,11 @@ jobs:
         run: ls -A
       - name: print path
         run: echo "$PATH"
+      - name: brew list
+        run: brew list --cask
       - name: print tf plan
         run: |
           mv terraform apply/banana
           cd apply/banana
+          terraform init
           terraform plan

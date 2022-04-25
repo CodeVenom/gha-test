@@ -38,6 +38,6 @@ jobs:
           mv terraform apply/banana
           cd apply/banana
           terraform init
-          terraform plan
-      - name: brew install yq
-        run: brew install yq
+          terraform plan -lock=false
+      - name: brew install tfenv
+        run: brew install tfenv

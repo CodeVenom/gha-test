@@ -14,7 +14,6 @@ jobs:
           wget https://releases.hashicorp.com/terraform/1.1.8/terraform_1.1.8_linux_arm64.zip
           unzip terraform_1.1.8_linux_arm64.zip
           rm terraform_1.1.8_linux_arm64.zip
-          mv terraform /bin
       - name: hello
         run: echo "hello"
       - name: assume role
@@ -26,9 +25,14 @@ jobs:
         run: aws s3 ls
       - name: aws - get caller identity
         run: aws sts get-caller-identity
+      - name: pwd
+        run: pwd
       - name: ls
         run: ls -A
+      - name: print path
+        run: echo "$PATH"
       - name: print tf plan
         run: |
+          mv terraform apply/banana
           cd apply/banana
           terraform plan

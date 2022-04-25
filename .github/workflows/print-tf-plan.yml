@@ -4,5 +4,16 @@ jobs:
   print-tf-plan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: echo "hello"
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: hello
+        run: echo "hello"
+      - name: assume role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::111093107596:role/jj-s3-lister
+          aws-region: eu-central-1
+      - name: aws - s3 list all
+        run: aws s3 ls
+      - name: aws - get caller identity
+        run: aws sts get-caller-identity

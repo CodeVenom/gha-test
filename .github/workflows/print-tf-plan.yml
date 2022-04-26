@@ -36,7 +36,7 @@ jobs:
         run: |
           git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' > diff.txt
           sed -E -i 's/[-a-zA-Z0-9]+\.tf//' diff.txt
-          cat diff.txt
+          cat diff.txt || echo "no tf files changed"
       - name: create tf plan
         run: |
           cd apply/banana

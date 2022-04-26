@@ -21,7 +21,7 @@ jobs:
 #          echo "$JJ_DIFF_LIST"
       - name: set matrix
         id: set-matrix
-        run: echo "::set-output name=matrix::${JJ_DIFF_LIST}"
+        run: echo "::set-output name=matrix::$(echo ${JJ_DIFF_LIST})"
   build:
     needs: prepare
     runs-on: ubuntu-latest

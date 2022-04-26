@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 2
       - name: create diff list
         run: |
-          export JJ_TEMP='["apply/banana"]'
+          export JJ_TEMP='["apply/banana/"]'
           echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
 #        run: |
 #          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
@@ -37,12 +37,29 @@ jobs:
       matrix:
         tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
     steps:
-      - name: ls
-        run: ls -A
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
       - name: install stuff
         run: |
           brew install tfenv
           tfenv install 1.1.8
           tfenv use 1.1.8
-      - name: print matrix value
-        run: echo ${{ matrix.tf }}
+      - name: assume role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::111093107596:role/jj-tf-planner
+          aws-region: eu-central-1
+      - name: create tf plan
+        run: |
+          cd ${{ matrix.tf }}
+          terraform init
+          terraform plan -lock=false > plan.txt
+          cat plan.txt
+      - name: store tf plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.tf }}plan.txt
+          path: ${{ matrix.tf }}plan.txt
+          retention-days: 3

@@ -32,7 +32,11 @@ jobs:
       - name: ls
         run: ls -A
       - name: list changed files
-        run: git diff "${GITHUB_SHA}^" --name-only
+        # TODO: backup original diff.txt
+        run: |
+          git diff "${GITHUB_SHA}^" --name-only > diff.txt
+          sed -E -i 's/[-a-zA-Z0-9]+\.tf//' diff.txt
+          cat diff.txt
       - name: create tf plan
         run: |
           cd apply/banana

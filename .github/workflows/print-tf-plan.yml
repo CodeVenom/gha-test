@@ -34,8 +34,8 @@ jobs:
       - name: list changed files
         # TODO: backup original diff.txt
         run: |
-          git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' > diff.txt
-          sed -E -i 's/[-a-zA-Z0-9]+\.tf//' diff.txt
+          git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' > diff.txt || echo "no tf files changed"
+          sed -E -i 's/[-a-zA-Z0-9]+\.tf//' diff.txt || echo "no tf files changed"
           cat diff.txt || echo "no tf files changed"
       - name: create tf plan
         run: |

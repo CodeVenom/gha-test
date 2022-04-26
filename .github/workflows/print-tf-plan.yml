@@ -33,8 +33,8 @@ jobs:
         run: ls -A
       - name: list changed files
         run: |
-          git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u > diff.txt
-          cat diff.txt
+          export JJ_DIFF_LIST=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u)
+          echo "$JJ_DIFF_LIST"
       - name: create tf plan
         run: |
           cd apply/banana

@@ -32,12 +32,12 @@ jobs:
       - name: ls
         run: ls -A
       - name: list changed files
-        # TODO: backup original diff.txt
         run: |
           export JJ_NO_DIFF=false
           git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' > diff.txt || export JJ_NO_DIFF=true
           echo "no diff: $JJ_NO_DIFF"
-          sed -E -i 's/[-a-zA-Z0-9]+\.tf//' diff.txt
+          sed -E -i.bak 's/[-a-zA-Z0-9]+\.tf//' diff.txt
+          cat diff.txt.bak
           cat diff.txt
       - name: create tf plan
         run: |

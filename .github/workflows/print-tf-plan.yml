@@ -32,6 +32,8 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
+    env:
+      JJ_PREFIX: ""
     strategy:
       fail-fast: false
       matrix:
@@ -57,9 +59,13 @@ jobs:
           terraform init
           terraform plan -lock=false > plan.txt
           cat plan.txt
+      - name: jj-prefix
+        run: |
+          export JJ_TEMP=$(echo ${{ matrix.tf }} | sed -E 's%/%-%g')
+          echo "JJ_PREFIX=$JJ_TEMP" >> $GITHUB_ENV
       - name: store tf plan
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.tf }}plan.txt
-          path: ${{ matrix.tf }}plan.txt
+          name: ${{ env.JJ_PREFIX }}plan.txt
+          path: ${{ env.JJ_PREFIX }}plan.txt
           retention-days: 3

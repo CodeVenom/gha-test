@@ -14,11 +14,6 @@ jobs:
           brew install tfenv
           tfenv install 1.1.8
           tfenv use 1.1.8
-#      - name: install stuff
-#        run: |
-#          wget https://releases.hashicorp.com/terraform/1.1.8/terraform_1.1.8_linux_arm64.zip
-#          unzip terraform_1.1.8_linux_arm64.zip
-#          rm terraform_1.1.8_linux_arm64.zip
       - name: assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -30,8 +25,14 @@ jobs:
         run: pwd
       - name: ls
         run: ls -A
-      - name: print tf plan
+      - name: create tf plan
         run: |
           cd apply/banana
           terraform init
-          terraform plan -lock=false
+          terraform plan -lock=false > plan.txt
+      - name: store tf plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: plan.txt
+          path: plan.txt
+          retention-days: 3

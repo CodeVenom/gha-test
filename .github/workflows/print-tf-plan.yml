@@ -4,45 +4,29 @@ permissions:
   id-token: write
   contents: read
 jobs:
-  print-tf-plan:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      - name: print env
-        run: env
-      - name: install stuff
+      - name: create diff list
         run: |
-          brew install tfenv
-          tfenv install 1.1.8
-          tfenv use 1.1.8
-      - name: assume role
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::111093107596:role/jj-tf-planner
-          aws-region: eu-central-1
-      - name: aws - print caller identity
-        run: aws sts get-caller-identity
-      - name: print home
-        run: echo "$HOME"
-      - name: pwd
-        run: pwd
-      - name: ls
-        run: ls -A
-      - name: list changed files
-        run: |
-          export JJ_DIFF_LIST=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u)
+          export JJ_DIFF_LIST=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "$JJ_DIFF_LIST"
-      - name: create tf plan
-        run: |
-          cd apply/banana
-          terraform init
-          terraform plan -lock=false > plan.txt
-      - name: store tf plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: plan.txt
-          path: apply/banana/plan.txt
-          retention-days: 3
+      - name: set matrix
+        id: set-matrix
+        run: echo "::set-output name=matrix::${JJ_DIFF_LIST}"
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: print matrix value
+        run: echo ${{ matrix.tf }}

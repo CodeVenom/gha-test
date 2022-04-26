@@ -4,6 +4,6 @@ resource "aws_instance" "web" {
 
   tags = {
     project = "banana"
-    some = "tag"
+    some = "taggy tag"
   }
 }

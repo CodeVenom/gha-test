@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+      - name: print env
+        run: env
       - name: install stuff
         run: |
           brew install tfenv
@@ -21,6 +23,8 @@ jobs:
           aws-region: eu-central-1
       - name: aws - print caller identity
         run: aws sts get-caller-identity
+      - name: print home
+        run: echo "$HOME"
       - name: pwd
         run: pwd
       - name: ls
@@ -30,14 +34,9 @@ jobs:
           cd apply/banana
           terraform init
           terraform plan -lock=false > plan.txt
-      - name: pwd after cd
-        run: pwd
-      - name: check for plan.txt
-        run: |
-          ls -A apply/banana
       - name: store tf plan
         uses: actions/upload-artifact@v3
         with:
           name: plan.txt
-          path: plan.txt
+          path: apply/banana/plan.txt
           retention-days: 3

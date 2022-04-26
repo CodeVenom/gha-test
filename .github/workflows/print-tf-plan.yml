@@ -21,7 +21,9 @@ jobs:
 #          echo "$JJ_DIFF_LIST"
       - name: set matrix
         id: set-matrix
-        run: echo "::set-output name=matrix::$(ls -A | jq -R -s -c 'split("\n")[:-1]')"
+        run: |
+          echo -n $JJ_DIFF_LIST
+          echo "::set-output name=matrix::$(ls -A | jq -R -s -c 'split("\n")[:-1]')"
   build:
     needs: prepare
     runs-on: ubuntu-latest

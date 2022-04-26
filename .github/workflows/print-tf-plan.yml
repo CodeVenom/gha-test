@@ -17,8 +17,11 @@ jobs:
           fetch-depth: 2
       - name: create diff list
         run: |
-          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          export JJ_TEMP='["apply/banana"]'
           echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
+#        run: |
+#          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+#          echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
       - name: print diff list
         run: |
           echo $JJ_DIFF_LIST
@@ -34,5 +37,12 @@ jobs:
       matrix:
         tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
     steps:
+      - name: ls
+        run: ls -A
+      - name: install stuff
+        run: |
+          brew install tfenv
+          tfenv install 1.1.8
+          tfenv use 1.1.8
       - name: print matrix value
         run: echo ${{ matrix.tf }}

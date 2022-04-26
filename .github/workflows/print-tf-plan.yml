@@ -67,5 +67,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.JJ_PREFIX }}plan.txt
-          path: ${{ env.JJ_PREFIX }}plan.txt
+          path: ${{ matrix.tf }}plan.txt
           retention-days: 3

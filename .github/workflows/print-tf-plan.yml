@@ -6,6 +6,8 @@ permissions:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    env:
+      JJ_DIFF_LIST: "[]"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:

@@ -17,11 +17,8 @@ jobs:
           fetch-depth: 2
       - name: create diff list
         run: |
-          export JJ_TEMP='["hello","there"]'
+          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
-#        run: |
-#          export JJ_DIFF_LIST=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
-#          echo "$JJ_DIFF_LIST"
       - name: print diff list
         run: |
           echo $JJ_DIFF_LIST

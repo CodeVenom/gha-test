@@ -1,8 +1,9 @@
 name: print-tf-plan
 on: [push]
 permissions:
-  id-token: write
   contents: read
+  id-token: write
+  issues: write
 env:
   JJ_TEST: false
 jobs:
@@ -46,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-#          assignees: CodeVenom
+          assignees: CodeVenom
           filename: .github/workflows/bug.md
           update_existing: false
       - name: test

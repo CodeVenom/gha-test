@@ -46,11 +46,9 @@ jobs:
         id: bla
         uses: octokit/request-action@v2.x
         with:
-          route: GET /repos/{owner}/{repo}/issues?labels={labels}&state={state}
+          route: GET /repos/{owner}/{repo}/issues?labels=bla&state=open
           owner: CodeVenom
           repo: gha-test
-          labels: bla
-          state: open
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #      - name: print bla data

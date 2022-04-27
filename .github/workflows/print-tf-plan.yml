@@ -39,9 +39,9 @@ jobs:
     steps:
       - name: test
         id: test
-        run: echo "::set-output name=bla::false"
+        run: echo "::set-output name=bla::$JJ_TEST"
   build:
-    if: ${{ needs.test.outputs.bla == "true" }}
+    if: ${{ needs.test.outputs.bla == 'true' }}
     needs: [prepare, test]
     runs-on: ubuntu-latest
     env:

@@ -42,13 +42,26 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - name: bug
-        uses: JasonEtco/create-an-issue@v2
+      - name: bla issues
+        id: bla
+        uses: octokit/request-action@v2.x
+        with:
+          route: GET /repos/{owner}/{repo}/issues
+          owner: CodeVenom
+          repo: gha-test
+          state: open
+          labels: bla
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          assignees: CodeVenom
-          filename: .github/workflows/bug.md
+#      - name: print bla data
+#        run: echo '${{ steps.bla.outputs.data }}'
+#      - name: bug
+#        uses: JasonEtco/create-an-issue@v2
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          assignees: CodeVenom
+#          filename: .github/workflows/bug.md
       - name: test
         id: test
         run: echo "::set-output name=bla::$JJ_TEST"

@@ -49,7 +49,6 @@ jobs:
         with:
           assignees: CodeVenom
           filename: .github/workflows/bug.md
-          update_existing: false
       - name: test
         id: test
         run: echo "::set-output name=bla::$JJ_TEST"

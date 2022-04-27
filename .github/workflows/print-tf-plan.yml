@@ -51,6 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: print bla data
         run: echo '${{ steps.bla.outputs.data }}'
+#        TODO: use post request instead
 #      - name: bug
 #        uses: JasonEtco/create-an-issue@v2
 #        env:
@@ -69,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JJ_PREFIX: ""
+      JJ_ROLE: ""
     strategy:
       fail-fast: false
       matrix:
@@ -83,6 +85,11 @@ jobs:
           brew install tfenv
           tfenv install 1.1.8
           tfenv use 1.1.8
+      - name: ok
+        run: |
+          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq '."${{ matrix.tf }}"')
+          echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
+          echo "$JJ_ROLE"
       - name: assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -89,7 +89,8 @@ jobs:
         run: |
           export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq '."${{ matrix.tf }}"')
           echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
-          echo "${{ env.JJ_ROLE }}"
+      - name: yo
+        run: echo "${{ env.JJ_ROLE }}"
       - name: assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:

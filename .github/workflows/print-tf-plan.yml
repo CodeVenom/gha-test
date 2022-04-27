@@ -60,9 +60,11 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: echo "::set-output name=bla::$JJ_TEST"
+        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
+      - name: here we go
+        run: echo '${{ steps.test.outputs.bla }}'
   build:
-    if: ${{ needs.test.outputs.bla == 'true' }}
+    if: ${{ needs.test.outputs.bla == '0' }}
     needs: [prepare, test]
     runs-on: ubuntu-latest
     env:

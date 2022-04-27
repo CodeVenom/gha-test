@@ -87,14 +87,14 @@ jobs:
           tfenv use 1.1.8
       - name: ok
         run: |
-          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq '."${{ matrix.tf }}"')
+          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"')
           echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
       - name: yo
         run: echo "${{ env.JJ_ROLE }}"
       - name: assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::111093107596:role/jj-tf-planner
+          role-to-assume: ${{ env.JJ_ROLE }}
           aws-region: eu-central-1
       - name: create tf plan
         run: |

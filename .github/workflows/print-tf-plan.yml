@@ -49,8 +49,8 @@ jobs:
           route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: print bla data
-#        run: echo '${{ steps.bla.outputs.data }}'
+      - name: print bla data
+        run: echo '${{ steps.bla.outputs.data }}'
 #      - name: bug
 #        uses: JasonEtco/create-an-issue@v2
 #        env:

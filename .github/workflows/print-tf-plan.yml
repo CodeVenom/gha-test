@@ -29,8 +29,14 @@ jobs:
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$JJ_DIFF_LIST"
-  build:
+  test:
     needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: echo "test"
+  build:
+    needs: [prepare, test]
     runs-on: ubuntu-latest
     env:
       JJ_PREFIX: ""

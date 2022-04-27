@@ -34,11 +34,14 @@ jobs:
   test:
     needs: prepare
     runs-on: ubuntu-latest
+    outputs:
+      bla: ${{ steps.test.outputs.bla }}
     steps:
       - name: test
-        run: echo "test"
+        id: test
+        run: echo "::set-output name=bla::false"
   build:
-    if: ${{ env.JJ_TEST == "true" }}
+    if: ${{ needs.test.outputs.bla == "true" }}
     needs: [prepare, test]
     runs-on: ubuntu-latest
     env:

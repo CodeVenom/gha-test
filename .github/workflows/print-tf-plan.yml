@@ -89,11 +89,11 @@ jobs:
           tfenv use 1.1.8
       - name: ok
         run: |
-          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}".region // "eu-central-1"')
+          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"')
           echo "JJ_REGION=$JJ_TEMP" >> $GITHUB_ENV
       - name: ok
         run: |
-          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}".role-arn')
+          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."role-arn" // "none"')
           echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
       - name: yo
         run: |

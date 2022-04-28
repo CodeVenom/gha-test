@@ -23,7 +23,6 @@ jobs:
       - name: mooo
         run: .github/workflows/jj.sh
       - name: set matrix
-        if: ${{ !env.JJ_WORKFLOW }}
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$JJ_TF"

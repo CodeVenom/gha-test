@@ -66,6 +66,7 @@ jobs:
         run: |
           echo '${{ steps.test.outputs.bla }}'
           echo '${{ steps.test.outputs.blub }}'
+          echo '${{ needs.prepare.outputs.matrix }}'
   build:
     if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub != '0' }}
     needs: [prepare, test]

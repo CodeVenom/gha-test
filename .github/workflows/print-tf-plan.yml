@@ -10,11 +10,9 @@ concurrency:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    env:
-      JJ_TF: "[]"
-      JJ_WORKFLOW: ""
     outputs:
       prefix-list: ${{ steps.moo.outputs.prefix-list }}
+      workflows: ${{ steps.moo.outputs.workflows }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -60,6 +58,7 @@ jobs:
           echo '${{ steps.test.outputs.bla }}'
           echo '${{ steps.test.outputs.blub }}'
           echo '${{ needs.prepare.outputs.prefix-list }}'
+          echo '${{ needs.prepare.outputs.workflows }}'
   build:
     if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub != '0' }}
     needs: [prepare, test]

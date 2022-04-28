@@ -8,7 +8,7 @@ concurrency:
   group: tf
   cancel-in-progress: false
 env:
-  JJ_DIR: ${{ env.GITHUB_WORKSPACE }}/.github/workflows/
+  JJ_DIR: /home/runner/work/gha-test/gha-test/.github/workflows/
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -21,7 +21,9 @@ jobs:
         with:
           fetch-depth: 2
       - name: yoyoyo
-        run: echo ${{ env.JJ_DIR }}
+        run: |
+          pwd
+          echo ${{ env.JJ_DIR }}
       - name: moo
         id: moo
         run: .github/workflows/jj.sh

@@ -61,13 +61,13 @@ jobs:
         id: test
         run: |
           echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
-          .github/workflows/ok.sh '${{ steps.bla.outputs.data }}'
+          .github/workflows/ok.sh '${{ needs.prepare.outputs.matrix }}'
       - name: here we go
         run: |
           echo '${{ steps.test.outputs.bla }}'
           echo '${{ steps.test.outputs.blub }}'
   build:
-    if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub == '0' }}
+    if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub != '0' }}
     needs: [prepare, test]
     runs-on: ubuntu-latest
     env:

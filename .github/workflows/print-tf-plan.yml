@@ -85,6 +85,7 @@ jobs:
 #          brew install tfenv
 #          tfenv install 1.1.8
 #          tfenv use 1.1.8
+#      # TODO: use jq --arg PREFIX "${{ matrix.tf }}"
 #      - name: ok
 #        run: |
 #          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"')

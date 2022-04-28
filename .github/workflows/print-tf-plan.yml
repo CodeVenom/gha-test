@@ -59,9 +59,7 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: |
-          echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
-          .github/workflows/ok.sh '${{ needs.prepare.outputs.matrix }}'
+        run: .github/workflows/ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.matrix }}'
       - name: here we go
         run: |
           echo '${{ steps.test.outputs.bla }}'

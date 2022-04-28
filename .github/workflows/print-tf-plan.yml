@@ -4,6 +4,9 @@ permissions:
   contents: read
   id-token: write
   issues: write
+concurrency:
+  group: tf
+  cancel-in-progress: false
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -24,52 +27,56 @@ jobs:
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$JJ_TF"
-#  test:
-#    needs: prepare
-#    runs-on: ubuntu-latest
-#    outputs:
-#      bla: ${{ steps.test.outputs.bla }}
-#    steps:
-#      - name: checkout
-#        uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 1
-#      - name: bla issues
-#        id: bla
-#        uses: octokit/request-action@v2.x
-#        with:
-#          route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    outputs:
+      bla: ${{ steps.bla.outputs.data }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: bla issues
+        id: bla
+        uses: octokit/request-action@v2.x
+        with:
+          route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #      - name: print bla data
 #        run: echo '${{ steps.bla.outputs.data }}'
-##        TODO: use post request instead
-##      - name: bug
-##        uses: JasonEtco/create-an-issue@v2
-##        env:
-##          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-##        with:
-##          assignees: CodeVenom
-##          filename: .github/workflows/bug.md
+#        TODO: use post request instead
+#      - name: bug
+#        uses: JasonEtco/create-an-issue@v2
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          assignees: CodeVenom
+#          filename: .github/workflows/bug.md
 #      - name: test
 #        id: test
 #        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
 #      - name: here we go
 #        run: echo '${{ steps.test.outputs.bla }}'
-#  build:
-#    if: ${{ needs.test.outputs.bla == '0' }}
-#    needs: [prepare, test]
-#    runs-on: ubuntu-latest
-#    env:
-#      JJ_PREFIX: ""
-#      # TODO: define default region
-#      JJ_REGION: ""
-#      JJ_ROLE: ""
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
-#    steps:
+  build:
+    if: ${{ needs.test.outputs.bla == '0' }}
+    needs: [prepare, test]
+    runs-on: ubuntu-latest
+    env:
+      JJ_PREFIX: ""
+      # TODO: define default region
+      JJ_REGION: ""
+      JJ_ROLE: ""
+    strategy:
+      fail-fast: false
+      matrix:
+        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: hello
+        run: |
+          echo "${{ matrix.tf }}"
+          echo "${{ needs.test.outputs.bla }}"
 #      - name: checkout
 #        uses: actions/checkout@v3
 #        with:

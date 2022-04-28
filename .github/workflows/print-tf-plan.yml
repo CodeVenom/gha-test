@@ -14,18 +14,14 @@ jobs:
       JJ_TF: "[]"
       JJ_WORKFLOW: ""
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      prefix-list: ${{ steps.moo.outputs.prefix-list }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      - name: mooo
+      - name: moo
         run: .github/workflows/jj.sh
-      - name: set matrix
-        id: set-matrix
-        run: |
-          echo "::set-output name=matrix::$JJ_TF"
   test:
     needs: prepare
     runs-on: ubuntu-latest
@@ -58,12 +54,12 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: .github/workflows/ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.matrix }}'
+        run: .github/workflows/ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.prefix-list }}'
       - name: here we go
         run: |
           echo '${{ steps.test.outputs.bla }}'
           echo '${{ steps.test.outputs.blub }}'
-          echo '${{ needs.prepare.outputs.matrix }}'
+          echo '${{ needs.prepare.outputs.prefix-list }}'
   build:
     if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub != '0' }}
     needs: [prepare, test]
@@ -76,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
+        tf: ${{ fromJson(needs.prepare.outputs.prefix-list) }}
     steps:
       - name: hello
         run: |

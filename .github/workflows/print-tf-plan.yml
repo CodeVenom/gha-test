@@ -4,13 +4,13 @@ permissions:
   contents: read
   id-token: write
   issues: write
-env:
-  JJ_TEST: false
 jobs:
   prepare:
     runs-on: ubuntu-latest
     env:
-      JJ_DIFF_LIST: "[]"
+      JJ_DIFFS: ""
+      JJ_TF: "[]"
+      JJ_WORKFLOW: ""
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -18,7 +18,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+      - name: one
+        run: |
+          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep '.github/workflows')
+          echo "JJ_WORKFLOW=$JJ_TEMP" >> $GITHUB_ENV
       - name: create diff list
+        if: ${{ env.JJ_WORKFLOW }}
         run: |
           export JJ_TEMP='["apply/banana/"]'
           echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
@@ -32,91 +37,91 @@ jobs:
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$JJ_DIFF_LIST"
-  test:
-    needs: prepare
-    runs-on: ubuntu-latest
-    outputs:
-      bla: ${{ steps.test.outputs.bla }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: bla issues
-        id: bla
-        uses: octokit/request-action@v2.x
-        with:
-          route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: print bla data
-        run: echo '${{ steps.bla.outputs.data }}'
-#        TODO: use post request instead
-#      - name: bug
-#        uses: JasonEtco/create-an-issue@v2
+#  test:
+#    needs: prepare
+#    runs-on: ubuntu-latest
+#    outputs:
+#      bla: ${{ steps.test.outputs.bla }}
+#    steps:
+#      - name: checkout
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#      - name: bla issues
+#        id: bla
+#        uses: octokit/request-action@v2.x
+#        with:
+#          route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: print bla data
+#        run: echo '${{ steps.bla.outputs.data }}'
+##        TODO: use post request instead
+##      - name: bug
+##        uses: JasonEtco/create-an-issue@v2
+##        env:
+##          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+##        with:
+##          assignees: CodeVenom
+##          filename: .github/workflows/bug.md
+#      - name: test
+#        id: test
+#        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
+#      - name: here we go
+#        run: echo '${{ steps.test.outputs.bla }}'
+#  build:
+#    if: ${{ needs.test.outputs.bla == '0' }}
+#    needs: [prepare, test]
+#    runs-on: ubuntu-latest
+#    env:
+#      JJ_PREFIX: ""
+#      # TODO: define default region
+#      JJ_REGION: ""
+#      JJ_ROLE: ""
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
+#    steps:
+#      - name: checkout
+#        uses: actions/checkout@v3
 #        with:
-#          assignees: CodeVenom
-#          filename: .github/workflows/bug.md
-      - name: test
-        id: test
-        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
-      - name: here we go
-        run: echo '${{ steps.test.outputs.bla }}'
-  build:
-    if: ${{ needs.test.outputs.bla == '0' }}
-    needs: [prepare, test]
-    runs-on: ubuntu-latest
-    env:
-      JJ_PREFIX: ""
-      # TODO: define default region
-      JJ_REGION: ""
-      JJ_ROLE: ""
-    strategy:
-      fail-fast: false
-      matrix:
-        tf: ${{ fromJson(needs.prepare.outputs.matrix) }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: install stuff
-        run: |
-          brew install tfenv
-          tfenv install 1.1.8
-          tfenv use 1.1.8
-      - name: ok
-        run: |
-          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"')
-          echo "JJ_REGION=$JJ_TEMP" >> $GITHUB_ENV
-      - name: ok
-        run: |
-          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."role-arn" // "none"')
-          echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
-      - name: yo
-        run: |
-          echo "${{ env.JJ_REGION }}"
-          echo "${{ env.JJ_ROLE }}"
-      - name: assume role
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ env.JJ_ROLE }}
-          aws-region: eu-central-1
-      - name: create tf plan
-        run: |
-          cd ${{ matrix.tf }}
-          terraform init
-          terraform plan -lock=false > plan.txt
-          cat plan.txt
-      - name: jj-prefix
-        run: |
-          export JJ_TEMP=$(echo ${{ matrix.tf }} | sed -E 's%/%-%g')
-          echo "JJ_PREFIX=$JJ_TEMP" >> $GITHUB_ENV
-      - name: store tf plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.JJ_PREFIX }}plan.txt
-          path: ${{ matrix.tf }}plan.txt
-          retention-days: 3
+#          fetch-depth: 1
+#      - name: install stuff
+#        run: |
+#          brew install tfenv
+#          tfenv install 1.1.8
+#          tfenv use 1.1.8
+#      - name: ok
+#        run: |
+#          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"')
+#          echo "JJ_REGION=$JJ_TEMP" >> $GITHUB_ENV
+#      - name: ok
+#        run: |
+#          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."role-arn" // "none"')
+#          echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
+#      - name: yo
+#        run: |
+#          echo "${{ env.JJ_REGION }}"
+#          echo "${{ env.JJ_ROLE }}"
+#      - name: assume role
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ env.JJ_ROLE }}
+#          aws-region: eu-central-1
+#      - name: create tf plan
+#        run: |
+#          cd ${{ matrix.tf }}
+#          terraform init
+#          terraform plan -lock=false > plan.txt
+#          cat plan.txt
+#      - name: jj-prefix
+#        run: |
+#          export JJ_TEMP=$(echo ${{ matrix.tf }} | sed -E 's%/%-%g')
+#          echo "JJ_PREFIX=$JJ_TEMP" >> $GITHUB_ENV
+#      - name: store tf plan
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ env.JJ_PREFIX }}plan.txt
+#          path: ${{ matrix.tf }}plan.txt
+#          retention-days: 3

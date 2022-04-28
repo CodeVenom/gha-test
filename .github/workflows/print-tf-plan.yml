@@ -28,8 +28,8 @@ jobs:
           echo "JJ_WORKFLOW=$JJ_TEMP" >> $GITHUB_ENV
       - name: create diff list
         if: ${{ !env.JJ_WORKFLOW }}
-        run: |
 #          export JJ_TEMP='["apply/banana/"]'
+        run: |
           export JJ_TEMP=$(echo $JJ_DIFFS | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "JJ_TF=$JJ_TEMP" >> $GITHUB_ENV
 #        run: |

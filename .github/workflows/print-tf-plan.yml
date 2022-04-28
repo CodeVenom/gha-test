@@ -23,20 +23,20 @@ jobs:
           export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep '.github/workflows')
           echo "JJ_WORKFLOW=$JJ_TEMP" >> $GITHUB_ENV
       - name: create diff list
-        if: ${{ env.JJ_WORKFLOW }}
+        if: ${{ !env.JJ_WORKFLOW }}
         run: |
           export JJ_TEMP='["apply/banana/"]'
-          echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
+          echo "JJ_DIFFS=$JJ_TEMP" >> $GITHUB_ENV
 #        run: |
 #          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
-#          echo "JJ_DIFF_LIST=$JJ_TEMP" >> $GITHUB_ENV
+#          echo "JJ_DIFFS=$JJ_TEMP" >> $GITHUB_ENV
       - name: print diff list
         run: |
-          echo $JJ_DIFF_LIST
+          echo $JJ_DIFFS
       - name: set matrix
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$JJ_DIFF_LIST"
+          echo "::set-output name=matrix::$JJ_DIFFS"
 #  test:
 #    needs: prepare
 #    runs-on: ubuntu-latest

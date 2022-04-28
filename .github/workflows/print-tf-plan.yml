@@ -31,7 +31,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     outputs:
-      bla: ${{ steps.bla.outputs.data }}
+      bla: ${{ steps.test.outputs.bla }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -54,11 +54,11 @@ jobs:
 #        with:
 #          assignees: CodeVenom
 #          filename: .github/workflows/bug.md
-#      - name: test
-#        id: test
-#        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
-#      - name: here we go
-#        run: echo '${{ steps.test.outputs.bla }}'
+      - name: test
+        id: test
+        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
+      - name: here we go
+        run: echo '${{ steps.test.outputs.bla }}'
   build:
     if: ${{ needs.test.outputs.bla == '0' }}
     needs: [prepare, test]

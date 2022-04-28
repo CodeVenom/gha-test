@@ -1,3 +1,7 @@
 {
-  "apply/banana/": "arn:aws:iam::111093107596:role/jj-tf-planner"
+  "apply/banana/": {
+    "_apply_mode": "manual",
+    "_region": "eu-central-1",
+    "role-arn": "arn:aws:iam::111093107596:role/jj-tf-planner"
+  }
 }

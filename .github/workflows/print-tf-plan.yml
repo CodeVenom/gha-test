@@ -70,6 +70,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JJ_PREFIX: ""
+      # TODO: define default region
+      JJ_REGION: ""
       JJ_ROLE: ""
     strategy:
       fail-fast: false
@@ -87,10 +89,16 @@ jobs:
           tfenv use 1.1.8
       - name: ok
         run: |
+          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}".region // "eu-central-1"')
+          echo "JJ_REGION=$JJ_TEMP" >> $GITHUB_ENV
+      - name: ok
+        run: |
           export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"')
           echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
       - name: yo
-        run: echo "${{ env.JJ_ROLE }}"
+        run: |
+          echo "${{ env.JJ_REGION }}"
+          echo "${{ env.JJ_ROLE }}"
       - name: assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:

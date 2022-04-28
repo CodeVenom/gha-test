@@ -18,23 +18,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      - name: one
-        run: |
-          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only)
-          echo "JJ_DIFFS=$JJ_TEMP" >> $GITHUB_ENV
-      - name: two
-        run: |
-          export JJ_TEMP=$(echo $JJ_DIFFS | grep '.github/workflows')
-          echo "JJ_WORKFLOW=$JJ_TEMP" >> $GITHUB_ENV
-      - name: create diff list
-        if: ${{ !env.JJ_WORKFLOW }}
-#          export JJ_TEMP='["apply/banana/"]'
-        run: |
-          export JJ_TEMP=$(echo $JJ_DIFFS | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
-          echo "JJ_TF=$JJ_TEMP" >> $GITHUB_ENV
+      - name: moo
+        run: .github/workflows/jj.sh
+#      - name: one
 #        run: |
-#          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+#          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only)
 #          echo "JJ_DIFFS=$JJ_TEMP" >> $GITHUB_ENV
+#      - name: two
+#        run: |
+#          export JJ_TEMP=$(echo $JJ_DIFFS | grep '.github/workflows')
+#          echo "JJ_WORKFLOW=$JJ_TEMP" >> $GITHUB_ENV
+#      - name: create diff list
+#        if: ${{ !env.JJ_WORKFLOW }}
+##          export JJ_TEMP='["apply/banana/"]'
+#        run: |
+#          export JJ_TEMP=$(echo $JJ_DIFFS | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+#          echo "JJ_TF=$JJ_TEMP" >> $GITHUB_ENV
+##        run: |
+##          export JJ_TEMP=$(git diff "${GITHUB_SHA}^" --name-only | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+##          echo "JJ_DIFFS=$JJ_TEMP" >> $GITHUB_ENV
       - name: set matrix
         id: set-matrix
         run: |

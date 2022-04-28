@@ -19,6 +19,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: moo
+        id: moo
         run: .github/workflows/jj.sh
   test:
     needs: prepare

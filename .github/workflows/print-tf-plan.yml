@@ -32,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       bla: ${{ steps.test.outputs.bla }}
+      blub: ${{ steps.test.outputs.blub }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -44,8 +45,10 @@ jobs:
           route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: print bla data
-#        run: echo '${{ steps.bla.outputs.data }}'
+#      - name: aaa
+#        id: aaa
+#        # TODO: use global env var for workflow path
+#        run: .github/workflows/ok.sh '${{ steps.bla.outputs.data }}'
 #        TODO: use post request instead
 #      - name: bug
 #        uses: JasonEtco/create-an-issue@v2
@@ -56,11 +59,15 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
+        run: |
+          echo "::set-output name=bla::$(echo '${{ steps.bla.outputs.data }}' | jq '. | length')"
+          .github/workflows/ok.sh '${{ steps.bla.outputs.data }}'
       - name: here we go
-        run: echo '${{ steps.test.outputs.bla }}'
+        run: |
+          echo '${{ steps.test.outputs.bla }}'
+          echo '${{ steps.test.outputs.blub }}'
   build:
-    if: ${{ needs.test.outputs.bla == '0' }}
+    if: ${{ needs.test.outputs.bla == '0' && needs.test.outputs.blub == '0' }}
     needs: [prepare, test]
     runs-on: ubuntu-latest
     env:

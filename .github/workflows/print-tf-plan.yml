@@ -26,7 +26,7 @@ jobs:
           echo ${{ env.JJ_DIR }}
       - name: moo
         id: moo
-        run: .github/workflows/jj.sh
+        run: ${{ env.JJ_DIR }}/jj.sh
   test:
     needs: prepare
     runs-on: ubuntu-latest

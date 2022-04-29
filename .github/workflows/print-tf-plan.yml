@@ -1,4 +1,5 @@
 name: print-tf-plan
+# TODO: switch to pr
 on: [push]
 permissions:
   contents: read
@@ -38,6 +39,7 @@ jobs:
         id: bla
         uses: octokit/request-action@v2.x
         with:
+          # TODO: define correct label name
           route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,6 +81,7 @@ jobs:
         run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
       - name: fail if role not found
         if: ${{ env.JJ_ROLE == 'none' }}
+        # TODO: create issue before exiting => should not block workflow runs
         run: exit 1
       - name: install stuff
         run: |

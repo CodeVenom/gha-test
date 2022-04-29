@@ -64,29 +64,27 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JJ_PREFIX: ""
-      # TODO: define default region
-      JJ_REGION: ""
-      JJ_ROLE: ""
+      JJ_REGION: "eu-central-1"
+      JJ_ROLE: "none"
     strategy:
       fail-fast: false
       matrix:
         tf: ${{ fromJson(needs.prepare.outputs.prefix-list) }}
     steps:
-      - name: hello
-        run: |
-          echo "${{ matrix.tf }}"
-          echo "${{ needs.test.outputs.bla }}"
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - name: onehundred
+        run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
+      - name: fail if role not found
+        if: ${{ env.JJ_ROLE == 'none' }}
+        run: exit 1
       - name: install stuff
         run: |
           brew install tfenv
           tfenv install 1.1.8
           tfenv use 1.1.8
-      - name: onehundred
-        run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
       - name: yo
         run: |
           echo "${{ env.JJ_MODE }}"

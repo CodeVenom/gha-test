@@ -89,6 +89,7 @@ jobs:
         run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
       - name: yo
         run: |
+          echo "${{ env.JJ_MODE }}"
           echo "${{ env.JJ_REGION }}"
           echo "${{ env.JJ_ROLE }}"
           echo "${{ matrix.tf }}"
@@ -103,13 +104,13 @@ jobs:
           terraform init
           terraform plan -lock=false > plan.txt
           cat plan.txt
-#      - name: jj-prefix
-#        run: |
-#          export JJ_TEMP=$(echo ${{ matrix.tf }} | sed -E 's%/%-%g')
-#          echo "JJ_PREFIX=$JJ_TEMP" >> $GITHUB_ENV
-#      - name: store tf plan
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ env.JJ_PREFIX }}plan.txt
-#          path: ${{ matrix.tf }}plan.txt
-#          retention-days: 3
+      - name: jj-prefix
+        run: |
+          export JJ_TEMP=$(echo ${{ matrix.tf }} | sed -E 's%/%-%g')
+          echo "JJ_PREFIX=$JJ_TEMP" >> "$GITHUB_ENV"
+      - name: store tf plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.JJ_PREFIX }}plan.txt
+          path: ${{ matrix.tf }}plan.txt
+          retention-days: 1

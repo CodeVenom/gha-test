@@ -1,8 +1,15 @@
 #!/bin/bash
 
 extractMappedValues() {
+  echo "JJ_MODE=$(getApplyMode "$1" "$2")" >> "$GITHUB_ENV"
   echo "JJ_REGION=$(getAWSRegion "$1" "$2")" >> "$GITHUB_ENV"
   echo "JJ_ROLE=$(getRoleARN "$1" "$2")" >> "$GITHUB_ENV"
+}
+
+getApplyMode() {
+  # TODO: add guard
+  PREFIX=$(stripPath "$1")
+  jq -r --arg PREFIX "$PREFIX" '.[$PREFIX]."apply-mode" // "manual"' "$2"
 }
 
 getAWSRegion() {

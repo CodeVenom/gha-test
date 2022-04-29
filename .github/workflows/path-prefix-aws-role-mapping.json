@@ -1,6 +1,11 @@
 {
   "apply": {
-    "_apply-mode": "manual",
+    "apply-mode": "manual",
+    "aws-region": "eu-west-1",
+    "role-arn": "arn:aws:iam::111093107596:role/jj-tf-planner"
+  },
+  "something": {
+    "apply-mode": "manual",
     "aws-region": "eu-west-1",
     "role-arn": "arn:aws:iam::111093107596:role/jj-tf-planner"
   }

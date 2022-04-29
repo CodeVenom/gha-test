@@ -7,12 +7,17 @@ extractMappedValues() {
 
 getAWSRegion() {
   # TODO: add guard
-  jq -r --arg PREFIX "$1" '.[$PREFIX]."aws-region" // "eu-central-1"' "$2"
+  # TODO: reduce code duplication
+  FULL_PATH="$1"
+  PREFIX=$(echo "$FULL_PATH" | sed -E 's%/[-a-zA-Z0-9\.]+%%g')
+  jq -r --arg PREFIX "$PREFIX" '.[$PREFIX]."aws-region" // "eu-central-1"' "$2"
 }
 
 getRoleARN() {
   # TODO: add guard
-  jq -r --arg PREFIX "$1" '.[$PREFIX]."role-arn" // "none"' "$2"
+  FULL_PATH="$1"
+  PREFIX=$(echo "$FULL_PATH" | sed -E 's%/[-a-zA-Z0-9\.]+%%g')
+  jq -r --arg PREFIX "$PREFIX" '.[$PREFIX]."role-arn" // "none"' "$2"
 }
 
 #export JJ_TEMP=$(jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"' .github/workflows/path-prefix-aws-role-mapping.json)

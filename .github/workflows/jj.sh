@@ -18,7 +18,7 @@ f1() {
 
 f2() {
   # TODO: add guard
-  echo "$1" | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's%/[-a-zA-Z0-9\.]+%%g' | sort -u | jq -R -s -c 'split("\n")[:-1]'
+  echo "$1" | grep -E '[-a-zA-Z0-9]+\.tf' | sed -E 's/[-a-zA-Z0-9]+\.tf//g' | sort -u | jq -R -s -c 'split("\n")[:-1]'
 }
 
 if declare -f "$1" > /dev/null

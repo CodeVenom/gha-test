@@ -76,16 +76,17 @@ jobs:
         run: |
           echo "${{ matrix.tf }}"
           echo "${{ needs.test.outputs.bla }}"
-#      - name: checkout
-#        uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 1
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
 #      - name: install stuff
 #        run: |
 #          brew install tfenv
 #          tfenv install 1.1.8
 #          tfenv use 1.1.8
-#      # TODO: use jq --arg PREFIX "${{ matrix.tf }}"
+      - name: onehundred
+        run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
 #      - name: ok
 #        run: |
 #          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."aws-region" // "eu-central-1"')
@@ -94,10 +95,10 @@ jobs:
 #        run: |
 #          export JJ_TEMP=$(cat .github/workflows/path-prefix-aws-role-mapping.json | jq -r '."${{ matrix.tf }}"."role-arn" // "none"')
 #          echo "JJ_ROLE=$JJ_TEMP" >> $GITHUB_ENV
-#      - name: yo
-#        run: |
-#          echo "${{ env.JJ_REGION }}"
-#          echo "${{ env.JJ_ROLE }}"
+      - name: yo
+        run: |
+          echo "${{ env.JJ_REGION }}"
+          echo "${{ env.JJ_ROLE }}"
 #      - name: assume role
 #        uses: aws-actions/configure-aws-credentials@v1
 #        with:

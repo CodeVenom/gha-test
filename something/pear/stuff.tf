@@ -3,7 +3,6 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
 
   tags = {
-    project = "kiwi"
-    foo = "barbarbarbarbarbarbarbarbarbarbar"
+    project = "pear"
   }
 }

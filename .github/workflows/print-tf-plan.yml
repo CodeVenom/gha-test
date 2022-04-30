@@ -22,8 +22,9 @@ jobs:
       - name: test workflow
         run: |
           cd ${{ env.JJ_DIR }}tests/
-          ./test.sh
+          ./test.sh runTestSuite
   prepare:
+    needs: init
     runs-on: ubuntu-latest
     outputs:
       prefix-list: ${{ steps.moo.outputs.prefix-list }}

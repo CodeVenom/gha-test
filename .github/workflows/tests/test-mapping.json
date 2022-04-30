@@ -1,0 +1,7 @@
+{
+  "real-key": {
+    "apply-mode": "auto",
+    "aws-region": "eu-west-1",
+    "role-arn": "role"
+  }
+}

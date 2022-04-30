@@ -1,0 +1,4 @@
+apply/banana/main.tf
+apply/kiwi/stuff.tf
+something/pear/main.tf
+something/pear/stuff.tf

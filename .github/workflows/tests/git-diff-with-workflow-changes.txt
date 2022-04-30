@@ -1,0 +1,5 @@
+.github/workflows/path-prefix-aws-role-mapping.json
+.github/workflows/print-tf-plan.yml
+.github/workflows/tests/git-diff-with-workflow-changes.txt
+.github/workflows/tests/test-mapping.json
+.github/workflows/tests/test.sh

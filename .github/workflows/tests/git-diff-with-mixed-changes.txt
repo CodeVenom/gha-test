@@ -1,0 +1,4 @@
+.github/workflows/print-tf-plan.yml
+.github/workflows/tests/test.sh
+apply/banana/main.tf
+something/pear/stuff.tf

@@ -11,6 +11,18 @@ concurrency:
 env:
   JJ_DIR: /home/runner/work/gha-test/gha-test/.github/workflows/
 jobs:
+  # TODO: rename to test
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: test workflow
+        run: |
+          cd ${{ env.JJ_DIR }}tests/
+          ./test.sh
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -23,7 +35,8 @@ jobs:
           fetch-depth: 2
       - name: moo
         id: moo
-        run: ${{ env.JJ_DIR }}/jj.sh prepare
+        run: ${{ env.JJ_DIR }}jj.sh prepare
+  # TODO: move steps to prepare job
   test:
     needs: prepare
     runs-on: ubuntu-latest
@@ -53,7 +66,7 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: ${{ env.JJ_DIR }}/ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.prefix-list }}'
+        run: ${{ env.JJ_DIR }}ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.prefix-list }}'
       - name: here we go
         run: |
           echo '${{ steps.test.outputs.bla }}'
@@ -78,7 +91,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: onehundred
-        run: ${{ env.JJ_DIR }}/me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}/path-prefix-aws-role-mapping.json"
+        run: ${{ env.JJ_DIR }}me.sh extractMappedValues "${{ matrix.tf }}" "${{ env.JJ_DIR }}path-prefix-aws-role-mapping.json"
       - name: fail if role not found
         if: ${{ env.JJ_ROLE == 'none' }}
         # TODO: create issue before exiting => should not block workflow runs

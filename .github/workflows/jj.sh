@@ -2,10 +2,10 @@
 
 prepare() {
   # find workflow and tf file changes
-  JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
-  JJ_B=$(f1 "$JJ_A")
+  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
+  local JJ_B=$(f1 "$JJ_A")
   # TODO: do not check for tf files if workflow files have been changed, set [] instead
-  JJ_C=$(f2 "$JJ_A")
+  local JJ_C=$(f2 "$JJ_A")
 
   echo "::set-output name=workflows::$JJ_B"
   echo "::set-output name=prefix-list::$JJ_C"

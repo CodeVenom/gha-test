@@ -76,8 +76,8 @@ jobs:
           echo "::set-output name=blub::$(echo '${{ needs.prepare.outputs.prefix-list }}' | jq '. | length')"
       - name: here we go
         run: |
-          echo 'issue count: ${{ env.JJ_ISSUE_COUNT }}'
-          echo 'bla issue count: ${{ steps.output.outputs.bla }}'
+          echo 'env issue count: ${{ env.JJ_ISSUE_COUNT }}'
+          echo 'output issue count: ${{ steps.output.outputs.bla }}'
           echo 'prefix list length: ${{ steps.output.outputs.blub }}'
           echo '${{ needs.prepare.outputs.prefix-list }}'
           echo '${{ needs.prepare.outputs.workflows }}'

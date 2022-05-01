@@ -7,7 +7,7 @@ updateIssueCount() {
 
 getIssueCount() {
   local githubToken="$1"
-  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues?state=open" | jq '. | length'
+  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues?state=open&labels=bla" | jq '. | length'
 }
 
 if declare -f "$1" > /dev/null

@@ -49,13 +49,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: git branch
-        run: git branch
+#      - name: git branch
+#        run: git branch
       - name: git diff
         run: git diff origin/main --name-only
-      - name: moo
-        id: moo
-        run: ${{ env.JJ_DIR }}jj.sh prepare '${{ github.event.pull_request.base.sha }}' '${{ github.sha }}'
+#      - name: moo
+#        id: moo
+#        run: ${{ env.JJ_DIR }}jj.sh prepare '${{ github.event.pull_request.base.sha }}' '${{ github.sha }}'
 #  build:
 #    if: ${{ !needs.prepare.outputs.workflows && needs.prepare.outputs.prefix-list-length != '0' }}
 #    needs: prepare

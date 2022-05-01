@@ -23,6 +23,9 @@ jobs:
         run: |
           cd ${{ env.JJ_DIR }}tests/
           ./test.sh runTestSuite
+      - name: create issue if tests failed
+        if: failure()
+        run: ${{ env.JJ_DIR }}issues.sh createIssue "${{ secrets.GITHUB_TOKEN }}"
   prepare:
     needs: init
     runs-on: ubuntu-latest
@@ -53,16 +56,6 @@ jobs:
           fetch-depth: 1
       - name: curl 1
         run: ${{ env.JJ_DIR }}issues.sh updateIssueCount "${{ secrets.GITHUB_TOKEN }}"
-      - name: curl 2
-        run: ${{ env.JJ_DIR }}issues.sh createIssue "${{ secrets.GITHUB_TOKEN }}"
-#        TODO: use post request instead
-#      - name: bug
-#        uses: JasonEtco/create-an-issue@v2
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          assignees: CodeVenom
-#          filename: .github/workflows/bug.md
       - name: set output
         id: output
         run: |

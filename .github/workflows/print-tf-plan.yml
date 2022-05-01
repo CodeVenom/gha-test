@@ -1,5 +1,4 @@
 name: print-tf-plan
-# TODO: switch to pr
 on:
   pull_request:
     types:

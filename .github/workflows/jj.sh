@@ -4,7 +4,7 @@ prepare() {
   # find workflow and tf file changes
   local commitHash="$1"
 #  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
-  local JJ_A=$(git diff "$commitHash" --name-only)
+  local JJ_A=$(git diff "main...test" --name-only)
 
   echo "$JJ_A" >&2
 

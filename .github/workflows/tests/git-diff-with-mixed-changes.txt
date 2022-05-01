@@ -2,3 +2,4 @@
 .github/workflows/tests/test.sh
 apply/banana/main.tf
 something/pear/stuff.tf
+another/path/to.txt

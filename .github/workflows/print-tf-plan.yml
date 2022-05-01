@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: curl 1
-        run: ${{ env.JJ_DIR }}issues.sh "${{ secrets.GITHUB_TOKEN }}"
+        run: ${{ env.JJ_DIR }}issues.sh getIssues "${{ secrets.GITHUB_TOKEN }}"
       - name: bla issues
         id: bla
         uses: octokit/request-action@v2.x

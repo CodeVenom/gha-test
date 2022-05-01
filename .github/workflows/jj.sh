@@ -9,6 +9,7 @@ prepare() {
 
   echo "::set-output name=workflows::$JJ_B"
   echo "::set-output name=prefix-list::$JJ_C"
+  echo "::set-output name=prefix-list-length::$(echo "$JJ_C" | jq '. | length')"
 }
 
 f1() {

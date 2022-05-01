@@ -14,6 +14,9 @@ jobs:
   # TODO: rename to test
   init:
     runs-on: ubuntu-latest
+    env:
+      # if workflow has no severe issues this will be set to 0 automatically
+      JJ_ISSUE_COUNT: "1"
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -26,11 +29,17 @@ jobs:
       - name: create issue if tests failed
         if: failure()
         run: ${{ env.JJ_DIR }}issues.sh createIssue "${{ secrets.GITHUB_TOKEN }}"
+      - name: update issue count
+        run: ${{ env.JJ_DIR }}issues.sh updateIssueCount "${{ secrets.GITHUB_TOKEN }}"
+      - name: fail if issues exist
+        if: ${{ env.JJ_ISSUE_COUNT != '0' }}
+        run: exit 1
   prepare:
     needs: init
     runs-on: ubuntu-latest
     outputs:
       prefix-list: ${{ steps.moo.outputs.prefix-list }}
+      prefix-list-length: ${{ steps.moo.outputs.prefix-list-length }}
       workflows: ${{ steps.moo.outputs.workflows }}
     steps:
       - name: checkout
@@ -41,36 +50,36 @@ jobs:
         id: moo
         run: ${{ env.JJ_DIR }}jj.sh prepare
   # TODO: move steps to prepare job
-  test:
-    needs: prepare
-    runs-on: ubuntu-latest
-    env:
-      JJ_ISSUE_COUNT: "1"
-    outputs:
-      bla: ${{ steps.output.outputs.bla }}
-      blub: ${{ steps.output.outputs.blub }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: curl 1
-        run: ${{ env.JJ_DIR }}issues.sh updateIssueCount "${{ secrets.GITHUB_TOKEN }}"
-      - name: set output
-        id: output
-        run: |
-          echo "::set-output name=bla::$JJ_ISSUE_COUNT"
-          echo "::set-output name=blub::$(echo '${{ needs.prepare.outputs.prefix-list }}' | jq '. | length')"
-      - name: here we go
-        run: |
-          echo 'env issue count: ${{ env.JJ_ISSUE_COUNT }}'
-          echo 'output issue count: ${{ steps.output.outputs.bla }}'
-          echo 'prefix list length: ${{ steps.output.outputs.blub }}'
-          echo '${{ needs.prepare.outputs.prefix-list }}'
-          echo '${{ needs.prepare.outputs.workflows }}'
+#  test:
+#    needs: prepare
+#    runs-on: ubuntu-latest
+#    env:
+#      JJ_ISSUE_COUNT: "1"
+#    outputs:
+#      bla: ${{ steps.output.outputs.bla }}
+#      blub: ${{ steps.output.outputs.blub }}
+#    steps:
+#      - name: checkout
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#      - name: curl 1
+#        run: ${{ env.JJ_DIR }}issues.sh updateIssueCount "${{ secrets.GITHUB_TOKEN }}"
+#      - name: set output
+#        id: output
+#        run: |
+#          echo "::set-output name=bla::$JJ_ISSUE_COUNT"
+#          echo "::set-output name=blub::$(echo '${{ needs.prepare.outputs.prefix-list }}' | jq '. | length')"
+#      - name: here we go
+#        run: |
+#          echo 'env issue count: ${{ env.JJ_ISSUE_COUNT }}'
+#          echo 'output issue count: ${{ steps.output.outputs.bla }}'
+#          echo 'prefix list length: ${{ steps.output.outputs.blub }}'
+#          echo '${{ needs.prepare.outputs.prefix-list }}'
+#          echo '${{ needs.prepare.outputs.workflows }}'
   build:
-    if: ${{ !needs.prepare.outputs.workflows && needs.test.outputs.bla == '0' && needs.test.outputs.blub != '0' }}
-    needs: [prepare, test]
+    if: ${{ !needs.prepare.outputs.workflows && needs.prepare.outputs.prefix-list-length != '0' }}
+    needs: prepare
     runs-on: ubuntu-latest
     env:
       JJ_PREFIX: ""

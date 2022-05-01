@@ -50,8 +50,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: curl 1
-        run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/CodeVenom/gha-test/issues?state=open"
+        run: ${{ env.JJ_DIR }}issues.sh "${{ secrets.GITHUB_TOKEN }}"
       - name: bla issues
         id: bla
         uses: octokit/request-action@v2.x

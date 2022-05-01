@@ -2,11 +2,11 @@
 
 prepare() {
   # find workflow and tf file changes
-  local baseBranch="$1"
-  local prBranch="$2"
+  local baseCommit="$1"
+  local prCommit="$2"
 #  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
   # TODO: fail on error here
-  local JJ_A=$(git diff "$baseBranch...$prBranch" --name-only)
+  local JJ_A=$(git diff "$baseCommit" "$prCommit" --name-only)
 
   echo "$JJ_A" >&2
 

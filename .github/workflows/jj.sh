@@ -2,7 +2,8 @@
 
 prepare() {
   # find workflow and tf file changes
-  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
+#  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
+  local JJ_A=$(git diff "${GITHUB_SHA}" --name-only)
   local JJ_B=$(f1 "$JJ_A")
   # TODO: do not check for tf files if workflow files have been changed, set [] instead
   local JJ_C=$(f2 "$JJ_A")

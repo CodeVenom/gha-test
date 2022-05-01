@@ -5,6 +5,7 @@ prepare() {
   local baseBranch="$1"
   local prBranch="$2"
 #  local JJ_A=$(git diff "${GITHUB_SHA}^" --name-only)
+  # TODO: fail on error here
   local JJ_A=$(git diff "$baseBranch...$prBranch" --name-only)
 
   echo "$JJ_A" >&2

@@ -53,7 +53,7 @@ jobs:
         run: env
       - name: moo
         id: moo
-        run: ${{ env.JJ_DIR }}jj.sh prepare "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
+        run: ${{ env.JJ_DIR }}jj.sh prepare '${{ github.event.pull_request.base.sha }}' '${{ github.sha }}'
 #  build:
 #    if: ${{ !needs.prepare.outputs.workflows && needs.prepare.outputs.prefix-list-length != '0' }}
 #    needs: prepare

@@ -44,8 +44,8 @@ jobs:
     env:
       JJ_ISSUE_COUNT: "1"
     outputs:
-      bla: ${{ steps.test.outputs.bla }}
-      blub: ${{ steps.test.outputs.blub }}
+      bla: ${{ steps.output.outputs.bla }}
+      blub: ${{ steps.output.outputs.blub }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -69,14 +69,16 @@ jobs:
 #        with:
 #          assignees: CodeVenom
 #          filename: .github/workflows/bug.md
-      - name: test
-        id: test
-        run: ${{ env.JJ_DIR }}ok.sh '["hello"]' '${{ needs.prepare.outputs.prefix-list }}'
+      - name: set output
+        id: output
+        run: |
+          echo "::set-output name=bla::$JJ_ISSUE_COUNT"
+          echo "::set-output name=blub::$(echo '${{ needs.prepare.outputs.prefix-list }}' | jq '. | length')"
       - name: here we go
         run: |
           echo 'issue count: ${{ env.JJ_ISSUE_COUNT }}'
-          echo 'bla issue count: ${{ steps.test.outputs.bla }}'
-          echo 'prefix list length: ${{ steps.test.outputs.blub }}'
+          echo 'bla issue count: ${{ steps.output.outputs.bla }}'
+          echo 'prefix list length: ${{ steps.output.outputs.blub }}'
           echo '${{ needs.prepare.outputs.prefix-list }}'
           echo '${{ needs.prepare.outputs.workflows }}'
   build:

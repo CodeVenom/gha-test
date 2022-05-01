@@ -12,7 +12,7 @@ runTestSuite() {
   local fakeKey="fake-key"
 
   echo "test workflow diff detection"
-  testCheckForWorkflowChanges ".github/workflows/print-tf-plan.yml" "$diffListMixed"
+  fail testCheckForWorkflowChanges ".github/workflows/print-tf-plan.yml" "$diffListMixed"
   testCheckForWorkflowChanges "" "$diffListTerraform"
   testCheckForWorkflowChanges ".github/workflows/path-prefix-aws-role-mapping.json" "$diffListWorkflow"
   echo ""

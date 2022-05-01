@@ -1,5 +1,11 @@
 #!/bin/bash
 
+createIssue() {
+  # TODO: add assignee
+  local githubToken="$1"
+  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues" -d '{"title":"hello","body":"test","labels":["bla"]}'
+}
+
 updateIssueCount() {
   local githubToken="$1"
   echo "JJ_ISSUE_COUNT=$(getIssueCount "$githubToken")" >> "$GITHUB_ENV"

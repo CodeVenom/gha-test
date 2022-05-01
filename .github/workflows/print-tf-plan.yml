@@ -53,14 +53,8 @@ jobs:
           fetch-depth: 1
       - name: curl 1
         run: ${{ env.JJ_DIR }}issues.sh updateIssueCount "${{ secrets.GITHUB_TOKEN }}"
-      - name: bla issues
-        id: bla
-        uses: octokit/request-action@v2.x
-        with:
-          # TODO: define correct label name
-          route: GET /repos/CodeVenom/gha-test/issues?labels=bla&state=open
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: curl 2
+        run: ${{ env.JJ_DIR }}issues.sh createIssue "${{ secrets.GITHUB_TOKEN }}"
 #        TODO: use post request instead
 #      - name: bug
 #        uses: JasonEtco/create-an-issue@v2

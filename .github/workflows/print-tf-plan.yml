@@ -41,6 +41,8 @@ jobs:
   test:
     needs: prepare
     runs-on: ubuntu-latest
+    env:
+      JJ_ISSUES: ""
     outputs:
       bla: ${{ steps.test.outputs.bla }}
       blub: ${{ steps.test.outputs.blub }}
@@ -50,7 +52,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: curl 1
-        run: ${{ env.JJ_DIR }}issues.sh getIssues "${{ secrets.GITHUB_TOKEN }}"
+        run: ${{ env.JJ_DIR }}issues.sh setIssues "${{ secrets.GITHUB_TOKEN }}"
       - name: bla issues
         id: bla
         uses: octokit/request-action@v2.x
@@ -69,7 +71,7 @@ jobs:
 #          filename: .github/workflows/bug.md
       - name: test
         id: test
-        run: ${{ env.JJ_DIR }}ok.sh '${{ steps.bla.outputs.data }}' '${{ needs.prepare.outputs.prefix-list }}'
+        run: ${{ env.JJ_DIR }}ok.sh '${{ env.JJ_ISSUES }}' '${{ needs.prepare.outputs.prefix-list }}'
       - name: here we go
         run: |
           echo '${{ steps.test.outputs.bla }}'

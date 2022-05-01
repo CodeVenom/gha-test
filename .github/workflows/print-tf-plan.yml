@@ -52,7 +52,7 @@ jobs:
       - name: git branch
         run: git branch
       - name: git diff
-        run: git diff main --name-only
+        run: git diff origin/main --name-only
       - name: moo
         id: moo
         run: ${{ env.JJ_DIR }}jj.sh prepare '${{ github.event.pull_request.base.sha }}' '${{ github.sha }}'

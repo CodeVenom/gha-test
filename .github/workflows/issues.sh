@@ -1,23 +1,23 @@
 #!/bin/bash
 
 createIssue() {
-  # TODO: add assignee
   local githubToken="$1"
-  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues" -d '{"title":"hello","body":"test","labels":["bla"]}'
+  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues" \
+    -d '{"title":"hello","body":"test","assignee":"CodeVenom","labels":["bla"]}'
 }
 
 updateIssueCount() {
   local githubToken="$1"
-  echo "JJ_ISSUE_COUNT=$(getIssueCount "$githubToken")" >> "$GITHUB_ENV"
+  echo "JJ_ISSUE_COUNT=$(getIssueCount "$githubToken")" >>"$GITHUB_ENV"
 }
 
 getIssueCount() {
   local githubToken="$1"
-  curl -s -H "Authorization: token $githubToken" "https://api.github.com/repos/CodeVenom/gha-test/issues?state=open&labels=bla" | jq '. | length'
+  curl -s -H "Authorization: token $githubToken" \
+    "https://api.github.com/repos/CodeVenom/gha-test/issues?state=open&labels=bla" | jq '. | length'
 }
 
-if declare -f "$1" > /dev/null
-then
+if declare -f "$1" >/dev/null; then
   "$@"
 else
   echo "invalid function reference" >&2

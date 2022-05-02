@@ -1,6 +1,8 @@
 name: print-tf-plan
 on:
   pull_request:
+    branches:
+      - main
     types:
       - opened
       - reopened

@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Hello world action step
-        uses: CodeVenom/my-gha # Uses an action in the root directory
+        uses: CodeVenom/my-gha@v1 # Uses an action in the root directory
         id: hello
         with:
           who-to-greet: 'Goofy'

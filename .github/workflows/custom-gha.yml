@@ -1,3 +1,4 @@
+name: custom-gha
 on:
   workflow_dispatch:
     inputs:

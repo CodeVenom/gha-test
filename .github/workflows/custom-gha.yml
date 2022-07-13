@@ -1,0 +1,25 @@
+name: custom-gha
+on:
+  workflow_dispatch:
+    inputs:
+      something:
+        type: string
+        required: true
+        description: something
+jobs:
+  custom-gha:
+    runs-on: ubuntu-latest
+    name: A job to say hello
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Hello world action step
+        uses: CodeVenom/my-gha@v1 # Uses an action in the root directory
+        id: hello
+        with:
+          who-to-greet: 'Goofy'
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
